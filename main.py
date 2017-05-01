@@ -6,24 +6,32 @@ import time
 
 # Function for initializing each key on the launchpad to red. Verifies each key works.
 def initialize_launchpad():
-    grid = [0, 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 32, 33, 34, 35, 36, 37, 38, 39, 40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 64, 65, 66, 67, 68, 69, 70, 71, 72, 80, 81, 82, 83, 84, 85, 86, 87, 88, 96, 97, 98, 99, 100, 101, 102, 103, 104, 112, 113, 114, 115, 116, 117, 118, 119, 120]
+    grid = [0, 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 32, 33, 34, 35, 36, 37, 38, 39, 40, 48, 49,
+            50, 51, 52, 53, 54, 55, 56, 57, 64, 65, 66, 67, 68, 69, 70, 71, 72, 80, 81, 82, 83, 84, 85, 86, 87, 88, 96,
+            97, 98, 99, 100, 101, 102, 103, 104, 112, 113, 114, 115, 116, 117, 118, 119, 120]
     for x in grid:
         # Initialize every key to RED
         if x <= 111 and x >= 104:
             midi_out.send_message([176, x, 31])
         midi_out.send_message([144, x, 31])
 
-def set_gric_color(color):
-    grid = [0, 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 32, 33, 34, 35, 36, 37, 38, 39, 40, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 64, 65, 66, 67, 68, 69, 70, 71, 72, 80, 81, 82, 83, 84, 85, 86, 87, 88, 96, 97, 98, 99, 100, 101, 102, 103, 104, 112, 113, 114, 115, 116, 117, 118, 119, 120]
+
+def set_grid_color(color):
+    grid = [0, 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 32, 33, 34, 35, 36, 37, 38, 39, 40, 48, 49,
+            50, 51, 52, 53, 54, 55, 56, 57, 64, 65, 66, 67, 68, 69, 70, 71, 72, 80, 81, 82, 83, 84, 85, 86, 87, 88, 96,
+            97, 98, 99, 100, 101, 102, 103, 104, 112, 113, 114, 115, 116, 117, 118, 119, 120]
     for x in grid:
         # Initialize every key to RED
-        #if x <= 111 and x >= 104:
-         #   midi_out.send_message([176, x, color])
-            # time.sleep(0.01)
+        # if x <= 111 and x >= 104:
+        #   midi_out.send_message([176, x, color])
+        # time.sleep(0.01)
         midi_out.send_message([144, x, color])
 
+
 def spiral_set_grid(color):
-    spiral = [0, 16, 32, 48, 64, 80, 96, 112, 113, 114, 115, 116, 117, 118, 119, 103, 87, 71, 55, 39, 23, 7, 6, 5, 4, 3, 2, 1, 17, 33, 49, 65, 81, 97, 98, 99, 100, 101, 102, 86, 70, 54, 38, 22, 21, 20, 19, 18, 34, 50, 66, 82, 83, 84, 85, 69, 53, 37, 36, 35, 51, 67, 68, 52]
+    spiral = [0, 16, 32, 48, 64, 80, 96, 112, 113, 114, 115, 116, 117, 118, 119, 103, 87, 71, 55, 39, 23, 7, 6, 5, 4, 3,
+              2, 1, 17, 33, 49, 65, 81, 97, 98, 99, 100, 101, 102, 86, 70, 54, 38, 22, 21, 20, 19, 18, 34, 50, 66, 82,
+              83, 84, 85, 69, 53, 37, 36, 35, 51, 67, 68, 52]
     for key in spiral:
         midi_out.send_message([144, key, color])
         time.sleep(0.03)
@@ -34,7 +42,8 @@ def spiral_set_grid(color):
 def solid_light(key, color, version, brightness):
     pass
 
-#sets input/output object
+
+# sets input/output object
 midi_in = rtmidi.MidiIn()
 midi_out = rtmidi.MidiOut()
 
@@ -42,9 +51,9 @@ midi_out = rtmidi.MidiOut()
 print midi_in.get_ports()
 
 for port_names in midi_in.get_ports():
-    name_in, port_in = port_names.rsplit(' ',1)
+    name_in, port_in = port_names.rsplit(' ', 1)
 
-    #debug code
+    # debug code
     print name_in, port_in
 
     if name_in == "Launchpad":
@@ -66,7 +75,7 @@ for port_names in midi_out.get_ports():
 
 
         # for port_name in midi_in:
-#    if 'Launchpad' in port_name:
+# if 'Launchpad' in port_name:
 #        midi_in.open_port(port_name[::-1])
 
 # Prints the current message in the Midi Buffer; prints nothing if there is nothing in the midi buffer
@@ -75,24 +84,24 @@ print midi_in.get_message()
 initialize_launchpad()
 time.sleep(1)
 '''
-set_gric_color(43)
+set_grid_color(43)
 time.sleep(1)
-set_gric_color(44)
+set_grid_color(44)
 time.sleep(1)
-set_gric_color(60)
+set_grid_color(60)
 time.sleep(1)
-set_gric_color(61)
+set_grid_color(61)
 time.sleep(1)
-set_gric_color(62)
+set_grid_color(62)
 time.sleep(1)
-set_gric_color(63)
+set_grid_color(63)
 time.sleep(1)
-set_gric_color(31)
+set_grid_color(31)
 '''
-set_gric_color(64)
+set_grid_color(64)
 time.sleep(0.5)
 spiral_set_grid(60)
-#while True:
+# while True:
 #    print midi_in.get_message()
 #    time.sleep(1)
 
