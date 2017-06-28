@@ -372,56 +372,45 @@ print midi_in.get_message()
 
 initialize_launchpad()
 time.sleep(1)
-'''
-set_grid_color(43)
-time.sleep(1)
-set_grid_color(44)
-time.sleep(1)
-set_grid_color(60)
-time.sleep(1)
-set_grid_color(61)
-time.sleep(1)
-set_grid_color(62)
-time.sleep(1)
-set_grid_color(63)
-time.sleep(1)
-set_grid_color(31)
-'''
 set_control_color(31)
-set_grid_color(48)
+spiral_set_grid(48)
 time.sleep(0.5)
-#set_control_color(60)
-#spiral_set_grid(60)
-#set_control_color(0)
-#spiral_set_grid(0)
-#set_control_color(44)
-#spiral_set_grid(44)
-#spiral_set_grid(0)
 
-response = {'[144, 0, 127]': 'VK_MEDIA_PREVIOUS_TRACK ',     # Key 1
+response = {'[144, 0, 127]': 'VK_MEDIA_PREVIOUS_TRACK',     # Key 1
             '[144, 1, 127]': 'VK_MEDIA_PLAY_PAUSE',          # Key 2
             '[144, 2, 127]': 'VK_MEDIA_NEXT_TRACK'           # Key 3
             }
 
+responses = {
+    144: { 0: 'VK_MEDIA_PREVIOUS_TRACK',
+           1: 'VK_MEDIA_PLAY_PAUSE'},
+    176: { 104: 'test',
+           105: 'test2'}
+}
+
 while True:
     key = midi_in.get_message()
-    if type(key) is tuple:
-        print key[0]
-        for key[0] in response:
-            SendInput(Keyboard(Key[0]))
+
+    if not key:
+
+        continue
+    controller, key, velocity = key[0]
+#    response = responses[a][b]
+    if velocity != 0:
+        print controller, key, velocity
+
+
+
+#while True:
+#    key = midi_in.get_message()
+#    if type(key) is tuple:
+#        print key[0]
+#        for key[0] in response:
+#            SendInput(Keyboard(Key[0]))
 #       if key[0] == [144, 0, 127]:
 #           SendInput(Keyboard(VK_MEDIA_PLAY_PAUSE))
 #           #SendInput(Keyboard(VK_MEDIA_PLAY_PAUSE, KEYEVENTF_KEYUP))
 #       elif key[0] == [144, 1, 127]:
 #           SendInput(Keyboard(VK_F24))
 #       elif key[0] == [144, 120, 127]:            break
-
-    else:
-        time.sleep(0.1)
-    #if midi_in.get_message() in :
-    #    switch_program()
-
-
-#  midiout.send_message([144, 0, 127]) Row 1, button 1 set to green
-
 
