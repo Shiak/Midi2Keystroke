@@ -50,3 +50,5 @@ Temporary Items
 .idea/modules.xml
 .idea/vcs.xml
 .idea/workspace.xml
+*.pyc
+midi2keystroke/Ring10.wav

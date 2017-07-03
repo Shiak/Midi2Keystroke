@@ -3,8 +3,11 @@
 import rtmidi
 import time
 import ctypes
+import pyaudio
+import wave
+import sys
 import midi2keystroke.alias as alias
-
+import midi2keystroke.audio as audio
 ########################
 #   Keystroke Code     #
 ########################
@@ -89,6 +92,13 @@ def Hardware(message, parameter=0):
 #   Launchpad Functions   #
 ###########################
 
+def poll_input():
+    message = midi_in.get_message()
+
+    if not message:
+        return None, None, None
+    controller, key, velocity = message[0]
+    return controller, key, velocity
 
 # Function for initializing each key on the launchpad to red. Verifies each key works.
 def initialize_launchpad(color):
@@ -159,25 +169,25 @@ midi_in = rtmidi.MidiIn()
 midi_out = rtmidi.MidiOut()
 
 # Searches port names for the Launchpad and opens the midi port associated with it
-print midi_in.get_ports()
+#print midi_in.get_ports()
 
 for port_names in midi_in.get_ports():
     name_in, port_in = port_names.rsplit(' ', 1)
 
     # debug code
-    print name_in, port_in
+#    print name_in, port_in
 
     if name_in == "Launchpad":
         midi_in.open_port(int(port_in))
         break
 
-print midi_out.get_ports()
+#print midi_out.get_ports()
 
 for port_names in midi_out.get_ports():
     name_out, port_out = port_names.rsplit(' ', 1)
 
     # debug code
-    print name_out, port_out
+#    print name_out, port_out
 
     if name_out == "Launchpad":
         midi_out.open_port(int(port_out))
@@ -188,7 +198,10 @@ print midi_in.get_message()
 
 
 responses = {
-    144: { 117: alias.VK_MEDIA_PREV_TRACK,
+    144: { 114: "Ring10.wav",
+           115: "boop.wav",
+           116: "This is a string",
+           117: alias.VK_MEDIA_PREV_TRACK,
            118: alias.VK_MEDIA_PLAY_PAUSE,
            119: alias.VK_MEDIA_NEXT_TRACK
            },
@@ -202,19 +215,31 @@ spiral_set_grid(0)
 time.sleep(1)
 map_key_color(responses, 63)
 while True:
-    key = midi_in.get_message()
+#    message = midi_in.get_message()
+#
+#    if not message:
+#
+#        continue
+    message = poll_input()
+    if message:
+        controller, key, velocity = poll_input()
 
-    if not key:
 
-        continue
-    controller, key, velocity = key[0]
+        if velocity == 127:
+            print controller, key, velocity
+            try:
+                response = responses[controller][key]
+                if str(response).isdigit():
+                    SendInput(Keyboard(response))
+                    #flash_key(controller, key, 63, 15)
+                else:
+                    print "'" + response + "' is not Not Numerical"
+                    if '.wav' in response:
+                        audio.play_audio(response, key, poll_input()[1])
+                        #flash_key(controller, key, 63, 15)
 
-    if velocity != 0:
-        print controller, key, velocity
-        try:
-            response = responses[controller][key]
-            print response
-            SendInput(Keyboard(response))
-            flash_key(controller, key, 63, 15)
-        except KeyError:
-            pass
+
+
+            except KeyError:
+                    pass
+
